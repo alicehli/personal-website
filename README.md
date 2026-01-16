@@ -18,8 +18,8 @@ A modern, responsive personal portfolio website showcasing photography, writing,
 ```
 personal-website/
 ├── index.html      # Main page with hero, reading, and contact sections
-├── gallery.html    # Photography gallery page
-├── writing.html    # Writing/essays page
+├── gallery.html    # Photography gallery page / TODO
+├── writing.html    # Writing/essays page / TODO 
 ├── styles.css      # All CSS styles
 ├── script.js       # JavaScript functionality and Google Books API integration
 ├── data.js         # Content data (personal info, books, photos)

@@ -362,6 +362,12 @@ nav {
 }
 
 /* Photo Grid */
+.photo-grid-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .photo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -370,6 +376,16 @@ nav {
     height: 610px;
     opacity: 0;
     animation: fadeInUp 1s ease 1.2s forwards;
+}
+
+.photo-grid-caption {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1s ease 1.4s forwards;
+    line-height: 1.5;
 }
 
 .photo-item {

@@ -37,9 +37,9 @@ const portfolioData = {
         // Currently working on - rotating bubble
         currentlyWorkingOn: [
             "Skiing double blacks",
-            "Building software for readers",
+            "Software for readers",
             "Perfecting my backflip",
-            "Learning how to snowboard"
+            "Learning to snowboard"
         ]
     },
 

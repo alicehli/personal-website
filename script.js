@@ -108,38 +108,6 @@
         activeLink.classList.add('active');
     }
 
-    /**
-     * Optional: Add intersection observer for fade-in animations on scroll
-     */
-    function initScrollAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements that should animate on scroll
-        const animateElements = document.querySelectorAll('.work-item');
-        animateElements.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-    }
-
-    // Initialize scroll animations if IntersectionObserver is supported
-    if ('IntersectionObserver' in window) {
-        document.addEventListener('DOMContentLoaded', initScrollAnimations);
-    }
 
     /**
      * Helper function for safe DOM updates
@@ -231,19 +199,37 @@
         initTypewriter();
         initCurrentlyWorkingBubble();
 
-        // Hero photos
+        // Hero photos with flip-card functionality
         const photoGrid = document.querySelector('.photo-grid');
         if (photoGrid) {
             photoGrid.innerHTML = heroPhotos.map((photo, index) => `
-                <div class="photo-item">
-                    ${photo.featured ? '<div class="featured-badge">Featured photo</div>' : ''}
-                    <img src="${photo.src}" alt="${photo.alt}" />
-                    <div class="photo-overlay">
-                        <div class="photo-title">${photo.title}</div>
-                        <div class="photo-meta">${photo.meta}</div>
+                <div class="photo-item-flip" data-index="${index}">
+                    <div class="photo-item-inner">
+                        <div class="photo-item-front">
+                            ${photo.featured ? '<div class="featured-badge">Featured photo</div>' : ''}
+                            <img src="${photo.src}" alt="${photo.alt}" />
+                            <div class="photo-overlay">
+                                <div class="photo-title">${photo.title}</div>
+                                <div class="photo-meta">${photo.meta}</div>
+                            </div>
+                        </div>
+                        <div class="photo-item-back">
+                            <div class="photo-back-content">
+                                <div class="photo-back-title">${photo.title}</div>
+                                <div class="photo-back-description">${photo.description || 'No description available.'}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `).join('');
+            
+            // Add click handlers for flip functionality
+            const flipCards = photoGrid.querySelectorAll('.photo-item-flip');
+            flipCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('flipped');
+                });
+            });
         }
     }
 

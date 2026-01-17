@@ -47,27 +47,31 @@ const portfolioData = {
     heroPhotos: [
         {
             src: "images/1_balloon.jpg",
-            alt: "Turkey",
-            title: "Turkey",
-            meta: "2025"
+            alt: "Cappadocia",
+            title: "Cappadocia, Turkey",
+            meta: "2025",
+            description: "A hot air balloon ride during sunrise over the stunning landscapes of Cappadocia!"
         },
         {
             src: "images/2_dresden.jpg",
             alt: "Dresden",
             title: "Dresden",
-            meta: "2025"
+            meta: "2025",
+            description: "A weekend trip from Berlin to explore some beautiful baroque architecture."
         },
         {
             src: "images/3_dc.jpg",
             alt: "Washington DC",
             title: "Washington DC",
-            meta: "2025"
+            meta: "2025",
+            description: "The famous cherry blossoms!"
         },
         {
             src: "images/4_vancouver.jpg",
             alt: "Vancouver",
             title: "Vancouver",
-            meta: "2025"
+            meta: "2025",
+            description: "Cityscape, mountains, the ocean, and incredible food. Home sweet home!"
         }
     ],
 

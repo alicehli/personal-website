@@ -55,21 +55,21 @@ const portfolioData = {
         {
             src: "images/2_dresden.jpg",
             alt: "Dresden",
-            title: "Dresden",
+            title: "Dresden, Germany",
             meta: "2025",
             description: "A weekend trip from Berlin to explore some beautiful baroque architecture."
         },
         {
             src: "images/3_dc.jpg",
-            alt: "Washington DC",
-            title: "Washington DC",
+            alt: "Washington, DC",
+            title: "Washington, DC",
             meta: "2025",
             description: "The famous cherry blossoms!"
         },
         {
             src: "images/4_vancouver.jpg",
-            alt: "Vancouver",
-            title: "Vancouver",
+            alt: "Vancouver, BC",
+            title: "Vancouver, BC",
             meta: "2025",
             description: "Cityscape, mountains, the ocean, and incredible food. Home sweet home!"
         }

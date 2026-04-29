@@ -29,29 +29,23 @@
 
     /**
      * Initialize navigation with smooth scrolling
-     * Uses event delegation to work with dynamically created links
      */
     function initNavigation() {
         const navContainer = document.querySelector('.nav-links');
         if (!navContainer) return;
-        
+
         navContainer.addEventListener('click', function(e) {
             const link = e.target.closest('.nav-link');
             if (!link) return;
-            
+
             const href = link.getAttribute('href');
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            
-            // Handle hash links (both #section and index.html#section)
-            if (href.startsWith('#') || (href.includes('#') && currentPage === 'index.html')) {
+            if (href.startsWith('#')) {
                 e.preventDefault();
-                const targetId = href.includes('#') ? href.split('#')[1] : href.substring(1);
-                
+                const targetId = href.substring(1);
                 if (scrollToSection(targetId)) {
                     updateActiveNavLink(link);
                 }
             }
-            // For links to other pages, allow normal navigation
         });
     }
 
@@ -142,25 +136,13 @@
         const navLinksContainer = document.querySelector('.nav-links');
         if (!navLinksContainer) return;
 
-        // Get current page to determine active link
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        
+        const currentHash = window.location.hash || '#home';
+
         navLinksContainer.innerHTML = portfolioData.navLinks.map(link => {
-            const href = link.href;
-            let isActive = false;
-            
-            // Determine active state based on current page
-            if (currentPage === 'index.html' && (href.includes('#home') || href === '#home')) {
-                isActive = true;
-            } else if (currentPage === 'gallery.html' && href.includes('gallery')) {
-                isActive = true;
-            } else if (currentPage === 'writing.html' && href.includes('writing')) {
-                isActive = true;
-            }
-            
+            const isActive = link.href === currentHash;
             return `
                 <li>
-                    <a href="${href}" class="nav-link ${isActive ? 'active' : ''}">
+                    <a href="${link.href}" class="nav-link ${isActive ? 'active' : ''}">
                         <span class="nav-icon">${icons[link.icon] || ''}</span>
                         ${link.label}
                     </a>

@@ -106,10 +106,8 @@ const portfolioData = {
 
     // Navigation Buttons
     navLinks: [
-        { href: "index.html", label: "Home", icon: "home" },
-        { href: "gallery.html", label: "Photo", icon: "camera" },
-        { href: "writing.html", label: "Writing", icon: "file-text" },
-        { href: "index.html#reading", label: "Reading", icon: "book" },
-        { href: "index.html#contact", label: "Contact", icon: "mail" }
+        { href: "#home", label: "Home", icon: "home" },
+        { href: "#reading", label: "Reading", icon: "book" },
+        { href: "#contact", label: "Contact", icon: "mail" }
     ]
 };

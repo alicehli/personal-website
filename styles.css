@@ -82,6 +82,14 @@ h1, h2, h3, h4, h5, h6 {
 .accent-blue { color: var(--accent-blue); }
 
 /* Navigation */
+nav {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .nav-links {
     display: flex;
     gap: 0.5rem;

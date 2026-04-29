@@ -456,33 +456,14 @@
             }, animationDuration);
         }
 
-        // Click handler to quickly cycle through all items
+        // Click handler to advance one item
         bubbleElement.addEventListener('click', function() {
-            // Pause auto-rotation
+            // Reset auto-rotation timer so it waits a full interval after the click
             if (autoRotationInterval) {
                 clearInterval(autoRotationInterval);
-                autoRotationInterval = null;
             }
-            isAutoRotating = false;
-
-            // Cycle through all remaining items quickly
-            const remainingItems = items.length - 1; // -1 because we skip current item
-            let cyclesLeft = remainingItems;
-
-            function quickCycle() {
-                if (cyclesLeft > 0) {
-                    updateBubble(true); // Use faster animation
-                    cyclesLeft--;
-                    setTimeout(quickCycle, 350); // Quick succession
-                } else {
-                    // Resume auto-rotation after cycling through
-                    isAutoRotating = true;
-                    autoRotationInterval = setInterval(updateBubble, 3000);
-                }
-            }
-
-            // Start quick cycle
-            setTimeout(quickCycle, 350);
+            updateBubble(true);
+            autoRotationInterval = setInterval(updateBubble, 3000);
         });
 
         // Start rotation after initial delay (display first item for a bit)

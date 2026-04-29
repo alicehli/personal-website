@@ -39,7 +39,8 @@ const portfolioData = {
             "Skiing double blacks",
             "Software for readers",
             "Perfecting my backflip",
-            "Learning to snowboard"
+            "Teaching myself to snowboard",
+            "Running my first half-marathon",
         ]
     },
 

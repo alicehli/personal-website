@@ -126,7 +126,7 @@
     /**
      * Render all content from data.js
      */
-    async function renderContent() {
+    function renderContent() {
         if (typeof portfolioData === 'undefined') {
             console.error('portfolioData not found. Make sure data.js is loaded.');
             return;
@@ -134,7 +134,7 @@
 
         renderNavigation();
         renderHero();
-        await renderReading();
+        renderReading();
         renderContact();
     }
 
@@ -239,12 +239,12 @@
     /**
      * Render reading section with horizontal scrolling book carousel
      */
-    async function renderReading() {
+    function renderReading() {
         const readingWidget = document.querySelector('.reading-widget');
         if (!readingWidget) return;
 
         const books = portfolioData.favoriteBooks || [];
-        
+
         if (books.length === 0) {
             readingWidget.innerHTML = `
                 <div class="reading-widget-placeholder">
@@ -254,110 +254,30 @@
             return;
         }
 
-        // Show loading state
         readingWidget.innerHTML = `
-            <div class="books-carousel-loading">
-                <p>Loading your favorite books...</p>
+            <div class="books-carousel-container">
+                <div class="books-carousel">
+                    ${books.map(book => `
+                        <div class="book-item-carousel">
+                            <a href="${book.goodreadsUrl || '#'}"
+                               class="book-link"
+                               ${book.goodreadsUrl ? '' : 'onclick="return false;"'}>
+                                <div class="book-cover-carousel">
+                                    ${book.coverUrl
+                                        ? `<img src="${book.coverUrl}" alt="${book.title}" loading="lazy" />`
+                                        : `<div class="book-cover-placeholder">${book.title.charAt(0)}</div>`
+                                    }
+                                </div>
+                                <div class="book-info-carousel">
+                                    <div class="book-title-carousel" title="${book.title}">${book.title}</div>
+                                    <div class="book-author-carousel">${book.author}</div>
+                                </div>
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
         `;
-
-        try {
-            // Fetch book data from Google Books API
-            const booksData = await Promise.all(
-                books.map(async (book) => {
-                    try {
-                        const bookInfo = await fetchBookFromGoogleBooks(book.title, book.author);
-                        return {
-                            ...book,
-                            coverUrl: bookInfo.thumbnail || '',
-                            googleBooksUrl: bookInfo.infoLink || '',
-                            description: bookInfo.description || ''
-                        };
-                    } catch (error) {
-                        console.warn(`Failed to fetch data for "${book.title}":`, error);
-                        return {
-                            ...book,
-                            coverUrl: '',
-                            googleBooksUrl: '',
-                            description: ''
-                        };
-                    }
-                })
-            );
-
-            // Render the carousel
-            readingWidget.innerHTML = `
-                <div class="books-carousel-container">
-                    <div class="books-carousel">
-                        ${booksData.map(book => `
-                            <div class="book-item-carousel">
-                                <a href="${book.goodreadsUrl || book.googleBooksUrl || '#'}" 
-                                   class="book-link" 
-                                   ${book.goodreadsUrl ? '' : book.googleBooksUrl ? 'target="_blank" rel="noopener noreferrer"' : ''}
-                                   ${book.goodreadsUrl || book.googleBooksUrl ? '' : 'onclick="return false;"'}>
-                                    <div class="book-cover-carousel">
-                                        ${book.coverUrl 
-                                            ? `<img src="${book.coverUrl}" alt="${book.title}" loading="lazy" />`
-                                            : `<div class="book-cover-placeholder">${book.title.charAt(0)}</div>`
-                                        }
-                                    </div>
-                                    <div class="book-info-carousel">
-                                        <div class="book-title-carousel" title="${book.title}">${book.title}</div>
-                                        <div class="book-author-carousel">${book.author}</div>
-                                    </div>
-                                </a>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        } catch (error) {
-            console.error('Error loading books:', error);
-            readingWidget.innerHTML = `
-                <div class="reading-widget-placeholder">
-                    <p>Error loading books. Please try again later.</p>
-                </div>
-            `;
-        }
-    }
-
-    /**
-     * Fetch book data from Google Books API
-     */
-    async function fetchBookFromGoogleBooks(title, author) {
-        // Construct search query
-        const query = `${encodeURIComponent(title)}+inauthor:${encodeURIComponent(author)}`;
-        const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=1`;
-        
-        try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            if (data.items && data.items.length > 0) {
-                const item = data.items[0];
-                const volumeInfo = item.volumeInfo;
-                
-                // Get thumbnail image (prefer medium, fallback to small)
-                const thumbnail = volumeInfo.imageLinks?.thumbnail 
-                    ? volumeInfo.imageLinks.thumbnail.replace('http://', 'https://').replace('&edge=curl', '')
-                    : (volumeInfo.imageLinks?.smallThumbnail?.replace('http://', 'https://') || '');
-                
-                return {
-                    thumbnail: thumbnail,
-                    infoLink: volumeInfo.infoLink || '',
-                    description: volumeInfo.description || ''
-                };
-            }
-            
-            return { thumbnail: '', infoLink: '', description: '' };
-        } catch (error) {
-            console.warn(`Error fetching book "${title}":`, error);
-            return { thumbnail: '', infoLink: '', description: '' };
-        }
     }
 
     /**

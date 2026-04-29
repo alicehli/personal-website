@@ -593,6 +593,15 @@ nav {
     }
 }
 
+/* Writing Section */
+.writing-placeholder {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
 /* Contact Section */
 .contact-section {
     text-align: center;

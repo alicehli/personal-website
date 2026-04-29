@@ -40,7 +40,7 @@ const portfolioData = {
             "Software for readers",
             "Perfecting my backflip",
             "Teaching myself to snowboard",
-            "Running my first half-marathon",
+            "Running a half-marathon",
         ]
     },
 
@@ -107,8 +107,9 @@ const portfolioData = {
 
     // Navigation Buttons
     navLinks: [
-        { href: "#home", label: "Home", icon: "home" },
-        { href: "#reading", label: "Reading", icon: "book" },
-        { href: "#contact", label: "Contact", icon: "mail" }
+        { href: "index.html#home", label: "Home", icon: "home" },
+        { href: "writing.html", label: "Writing", icon: "file-text" },
+        { href: "index.html#reading", label: "Reading", icon: "book" },
+        { href: "index.html#contact", label: "Contact", icon: "mail" }
     ]
 };

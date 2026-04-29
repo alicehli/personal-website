@@ -34,18 +34,26 @@
         const navContainer = document.querySelector('.nav-links');
         if (!navContainer) return;
 
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
         navContainer.addEventListener('click', function(e) {
             const link = e.target.closest('.nav-link');
             if (!link) return;
 
             const href = link.getAttribute('href');
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const targetId = href.substring(1);
-                if (scrollToSection(targetId)) {
-                    updateActiveNavLink(link);
+
+            // Check if the link points to a hash on the current page
+            if (href.includes('#')) {
+                const [linkPage, linkHash] = href.split('#');
+                const onSamePage = linkPage === currentPage || (currentPage === '' && linkPage === 'index.html') || linkPage === '';
+                if (onSamePage && linkHash) {
+                    e.preventDefault();
+                    if (scrollToSection(linkHash)) {
+                        updateActiveNavLink(link);
+                    }
                 }
             }
+            // Non-hash links (e.g. "writing.html") navigate normally
         });
     }
 
@@ -85,7 +93,8 @@
         });
         
         if (current) {
-            const activeLink = document.querySelector(`.nav-link[href="#${current}"]`);
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const activeLink = document.querySelector(`.nav-link[href="${currentPage}#${current}"]`);
             if (activeLink) {
                 updateActiveNavLink(activeLink);
             }
@@ -136,10 +145,22 @@
         const navLinksContainer = document.querySelector('.nav-links');
         if (!navLinksContainer) return;
 
-        const currentHash = window.location.hash || '#home';
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const currentHash = window.location.hash;
 
         navLinksContainer.innerHTML = portfolioData.navLinks.map(link => {
-            const isActive = link.href === currentHash;
+            let isActive = false;
+            if (link.href.includes('#')) {
+                // Link with hash (e.g. "index.html#home") — active if we're on that page and hash matches
+                const [linkPage, linkHash] = link.href.split('#');
+                const onSamePage = currentPage === linkPage || (currentPage === '' && linkPage === 'index.html');
+                if (onSamePage) {
+                    isActive = currentHash === '#' + linkHash || (!currentHash && linkHash === 'home');
+                }
+            } else {
+                // Plain page link (e.g. "writing.html") — active if we're on that page
+                isActive = currentPage === link.href;
+            }
             return `
                 <li>
                     <a href="${link.href}" class="nav-link ${isActive ? 'active' : ''}">

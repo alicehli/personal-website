@@ -19,8 +19,14 @@
      * Initialize light/dark theme toggle
      */
     function initThemeToggle() {
-        const btn = document.querySelector('.theme-toggle');
-        if (!btn) return;
+        const nav = document.querySelector('nav');
+        if (!nav) return;
+
+        // Create toggle button dynamically
+        const btn = document.createElement('button');
+        btn.className = 'theme-toggle';
+        btn.setAttribute('aria-label', 'Toggle theme');
+        nav.appendChild(btn);
 
         // Determine initial theme
         const stored = localStorage.getItem('theme');
@@ -56,30 +62,7 @@
      * Initialize navigation with smooth scrolling
      */
     function initNavigation() {
-        const navContainer = document.querySelector('.nav-links');
-        if (!navContainer) return;
-
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-        navContainer.addEventListener('click', function(e) {
-            const link = e.target.closest('.nav-link');
-            if (!link) return;
-
-            const href = link.getAttribute('href');
-
-            // Check if the link points to a hash on the current page
-            if (href.includes('#')) {
-                const [linkPage, linkHash] = href.split('#');
-                const onSamePage = linkPage === currentPage || (currentPage === '' && linkPage === 'index.html') || linkPage === '';
-                if (onSamePage && linkHash) {
-                    e.preventDefault();
-                    if (scrollToSection(linkHash)) {
-                        updateActiveNavLink(link);
-                    }
-                }
-            }
-            // Non-hash links (e.g. "writing.html") navigate normally
-        });
+        // All nav links are now plain page links — no special click handling needed
     }
 
     /**
@@ -118,8 +101,7 @@
         });
         
         if (current) {
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            const activeLink = document.querySelector(`.nav-link[href="${currentPage}#${current}"]`);
+            const activeLink = document.querySelector(`.nav-link[href="/#${current}"]`);
             if (activeLink) {
                 updateActiveNavLink(activeLink);
             }
@@ -172,23 +154,17 @@
         const navLinksContainer = document.querySelector('.nav-links');
         if (!navLinksContainer) return;
 
-        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        const currentHash = window.location.hash;
+        const path = window.location.pathname;
 
         navLinksContainer.innerHTML = portfolioData.navLinks.map(link => {
             let isActive = false;
-            if (link.href.includes('#')) {
-                // Link with hash (e.g. "index.html#home") — active if we're on that page and hash matches
-                const [linkPage, linkHash] = link.href.split('#');
-                const onSamePage = currentPage === linkPage || (currentPage === '' && linkPage === 'index.html');
-                if (onSamePage) {
-                    isActive = currentHash === '#' + linkHash || (!currentHash && linkHash === 'home');
-                }
+            if (link.href === '/') {
+                isActive = path === '/' || path === '/index.html';
             } else {
-                // Plain page link (e.g. "writing.html") — active if we're on that page
-                isActive = currentPage === link.href;
-                // gallery.html is a sub-page of photography
-                if (link.href === 'photography.html' && currentPage === 'gallery.html') {
+                // e.g. link.href="/photography" matches path="/photography" or "/photography.html"
+                isActive = path === link.href || path === link.href + '.html';
+                // /gallery is a sub-page of /photography
+                if (link.href === '/photography' && (path === '/gallery' || path === '/gallery.html')) {
                     isActive = true;
                 }
             }
@@ -471,7 +447,7 @@
      * Fetch the photo list for a trip from its photos.json manifest
      */
     function fetchTripPhotos(folder) {
-        return fetch(folder + '/photos.json')
+        return fetch('/' + folder + '/photos.json')
             .then(function(res) { return res.json(); })
             .catch(function() { return []; });
     }
@@ -486,8 +462,8 @@
         const trips = portfolioData.photoTrips || [];
 
         grid.innerHTML = trips.map(function(trip) {
-            const cover = trip.cover ? trip.folder + '/' + trip.cover : '';
-            return '<a href="gallery.html?trip=' + trip.slug + '" class="trip-card">' +
+            const cover = trip.cover ? '/' + trip.folder + '/' + trip.cover : '';
+            return '<a href="/gallery?trip=' + trip.slug + '" class="trip-card">' +
                 '<img src="' + cover + '" alt="' + trip.title + '" loading="lazy" />' +
                 '<div class="trip-card-overlay">' +
                     '<h3 class="trip-card-title">' + trip.title + '</h3>' +
@@ -520,7 +496,7 @@
         updateElement('.gallery-title', trip.title, 'textContent');
 
         fetchTripPhotos(trip.folder).then(function(photos) {
-            const photoPaths = photos.map(p => `${trip.folder}/${p}`);
+            const photoPaths = photos.map(p => `/${trip.folder}/${p}`);
 
             gallery.innerHTML = photoPaths.map((src, i) => `
                 <div class="masonry-item">

@@ -114,7 +114,9 @@ const portfolioData = {
         { slug: "canada", title: "Canada", year: "2025", folder: "images/2025_canada", cover: "DSC03704.JPG" },
         // 2026
         { slug: "japan", title: "Japan", year: "2026", folder: "images/2026_japan", cover: "DSC08808.JPG" },
-        { slug: "china", title: "China", year: "2026", folder: "images/2026_china", cover: "DSC08391.JPG" }
+        { slug: "china", title: "China", year: "2026", folder: "images/2026_china", cover: "DSC08391.JPG" },
+        { slug: "south_korea", title: "South Korea", year: "2026", folder: "images/2026_skorea", cover: "DSC01006.JPG" },
+        { slug: "peeps", title: "Peeps", year: "202X", folder: "images/202X_peeps", cover: "DSC03195.JPG" },
     ],
 
     // Navigation Buttons

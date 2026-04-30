@@ -8,11 +8,36 @@
 
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function() {
+        initThemeToggle();
         renderContent();
         initNavigation();
         initScrollTracking();
         console.log('Alice Portfolio initialized ✨');
     });
+
+    /**
+     * Initialize light/dark theme toggle
+     */
+    function initThemeToggle() {
+        const btn = document.querySelector('.theme-toggle');
+        if (!btn) return;
+
+        // Determine initial theme
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+
+        document.documentElement.setAttribute('data-theme', theme);
+        btn.innerHTML = theme === 'dark' ? icons.sun : icons.moon;
+
+        btn.addEventListener('click', function() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            btn.innerHTML = next === 'dark' ? icons.sun : icons.moon;
+        });
+    }
 
     /**
      * Helper function to scroll to a section by ID
@@ -136,6 +161,8 @@
         renderHero();
         renderReading();
         renderContact();
+        renderTripsGrid();
+        renderGallery();
     }
 
     /**
@@ -160,6 +187,10 @@
             } else {
                 // Plain page link (e.g. "writing.html") — active if we're on that page
                 isActive = currentPage === link.href;
+                // gallery.html is a sub-page of photography
+                if (link.href === 'photography.html' && currentPage === 'gallery.html') {
+                    isActive = true;
+                }
             }
             return `
                 <li>
@@ -434,6 +465,135 @@
                 ${icons.goodreads}
             </a>
         `);
+    }
+
+    /**
+     * Fetch the photo list for a trip from its photos.json manifest
+     */
+    function fetchTripPhotos(folder) {
+        return fetch(folder + '/photos.json')
+            .then(function(res) { return res.json(); })
+            .catch(function() { return []; });
+    }
+
+    /**
+     * Render trips grid on photography.html
+     */
+    function renderTripsGrid() {
+        const grid = document.querySelector('.trips-grid');
+        if (!grid) return;
+
+        const trips = portfolioData.photoTrips || [];
+
+        grid.innerHTML = trips.map(function(trip) {
+            const cover = trip.cover ? trip.folder + '/' + trip.cover : '';
+            return '<a href="gallery.html?trip=' + trip.slug + '" class="trip-card">' +
+                '<img src="' + cover + '" alt="' + trip.title + '" loading="lazy" />' +
+                '<div class="trip-card-overlay">' +
+                    '<h3 class="trip-card-title">' + trip.title + '</h3>' +
+                    '<span class="trip-card-year">' + trip.year + '</span>' +
+                '</div>' +
+            '</a>';
+        }).join('');
+    }
+
+    /**
+     * Render masonry gallery on gallery.html
+     */
+    function renderGallery() {
+        const gallery = document.querySelector('.masonry-gallery');
+        if (!gallery) return;
+
+        const params = new URLSearchParams(window.location.search);
+        const slug = params.get('trip');
+        const trips = portfolioData.photoTrips || [];
+        const trip = trips.find(t => t.slug === slug);
+
+        if (!trip) {
+            gallery.innerHTML = '<p class="writing-placeholder">Trip not found.</p>';
+            return;
+        }
+
+        // Update page title and header
+        document.title = `${trip.title} - Alice Li`;
+        updateElement('.gallery-subtitle', `${trip.title}, ${trip.year}`, 'textContent');
+        updateElement('.gallery-title', trip.title, 'textContent');
+
+        fetchTripPhotos(trip.folder).then(function(photos) {
+            const photoPaths = photos.map(p => `${trip.folder}/${p}`);
+
+            gallery.innerHTML = photoPaths.map((src, i) => `
+                <div class="masonry-item">
+                    <img src="${src}" alt="${trip.title} photo ${i + 1}" loading="lazy" data-index="${i}" />
+                </div>
+            `).join('');
+
+            // Click to open lightbox
+            gallery.addEventListener('click', function(e) {
+                const img = e.target.closest('img[data-index]');
+                if (!img) return;
+                openLightbox(photoPaths, parseInt(img.dataset.index, 10));
+            });
+        });
+    }
+
+    /**
+     * Full-screen lightbox with arrow navigation
+     */
+    function openLightbox(photos, startIndex) {
+        let current = startIndex;
+
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'lightbox-overlay';
+
+        overlay.innerHTML = `
+            <button class="lightbox-close" aria-label="Close">&times;</button>
+            <button class="lightbox-arrow lightbox-prev" aria-label="Previous">&lsaquo;</button>
+            <img class="lightbox-img" src="${photos[current]}" alt="Photo" />
+            <button class="lightbox-arrow lightbox-next" aria-label="Next">&rsaquo;</button>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+
+        const img = overlay.querySelector('.lightbox-img');
+
+        function show(index) {
+            current = index;
+            img.src = photos[current];
+        }
+
+        function next() {
+            show((current + 1) % photos.length);
+        }
+
+        function prev() {
+            show((current - 1 + photos.length) % photos.length);
+        }
+
+        function close() {
+            overlay.remove();
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', onKey);
+        }
+
+        function onKey(e) {
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowRight') next();
+            if (e.key === 'ArrowLeft') prev();
+        }
+
+        document.addEventListener('keydown', onKey);
+
+        overlay.querySelector('.lightbox-close').addEventListener('click', close);
+        overlay.querySelector('.lightbox-prev').addEventListener('click', prev);
+        overlay.querySelector('.lightbox-next').addEventListener('click', next);
+
+        // Click on backdrop (not on img or buttons) to close
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) close();
+        });
     }
 
 })();

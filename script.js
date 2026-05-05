@@ -194,7 +194,17 @@
         `);
         
         if (hero.description) {
-            updateElement('#hero-description', hero.description, 'textContent');
+            const highlightedDescription = hero.description
+                .replace(
+                    'Politics and Government',
+                    '<span class="accent-pink">Politics and Government</span>'
+                )
+                .replace(
+                    'Computer Science and International Business',
+                    '<span class="accent-green">Computer Science and International Business</span>'
+                );
+
+            updateElement('#hero-description', highlightedDescription);
         }
         
         updateElement('.hero-meta', `

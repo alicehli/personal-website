@@ -158,19 +158,20 @@
 
         navLinksContainer.innerHTML = portfolioData.navLinks.map(link => {
             let isActive = false;
-            if (link.href === '/') {
-                isActive = path === '/' || path === '/index.html';
-            } else {
-                // e.g. link.href="/photography" matches path="/photography" or "/photography.html"
-                isActive = path === link.href || path === link.href + '.html';
-                // /gallery is a sub-page of /photography
-                if (link.href === '/photography' && (path === '/gallery' || path === '/gallery.html')) {
-                    isActive = true;
+            if (!link.external) {
+                if (link.href === '/') {
+                    isActive = path === '/' || path === '/index.html';
+                } else {
+                    isActive = path === link.href || path === link.href + '.html';
+                    if (link.href === '/photography' && (path === '/gallery' || path === '/gallery.html')) {
+                        isActive = true;
+                    }
                 }
             }
+            const externalAttrs = link.external ? 'target="_blank" rel="noopener noreferrer"' : '';
             return `
                 <li>
-                    <a href="${link.href}" class="nav-link ${isActive ? 'active' : ''}">
+                    <a href="${link.href}" class="nav-link ${isActive ? 'active' : ''}" ${externalAttrs}>
                         <span class="nav-icon">${icons[link.icon] || ''}</span>
                         ${link.label}
                     </a>
@@ -293,6 +294,10 @@
                         </div>
                     `).join('')}
                 </div>
+            </div>
+            <div class="reading-widget-footer">
+                More book thoughts and projects live at
+                <a href="https://aliceinstories.com" target="_blank" rel="noopener noreferrer">aliceinstories.com</a> ✦ Come visit me there!
             </div>
         `;
     }

@@ -30,7 +30,7 @@ const portfolioData = {
                 "software engineer",
                 "quantitative developer",
                 "Canadian living in NYC",
-                "voracious reader",
+                "lover of books and words",
                 "fitness enthusiast",
             ],
         },
@@ -127,6 +127,7 @@ const portfolioData = {
     navLinks: [
         { href: "/", label: "Home", icon: "home" },
         { href: "/writing", label: "Writing", icon: "file-text" },
-        { href: "/photography", label: "Photography", icon: "camera" }
+        { href: "/photography", label: "Photography", icon: "camera" },
+        { href: "https://aliceinstories.com", label: "Books and Reading", icon: "book", external: true }
     ]
 };

@@ -667,6 +667,78 @@ nav {
     font-size: 1.1rem;
 }
 
+/* Essay / Article */
+.essay {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.essay-intro {
+    font-style: italic;
+    color: var(--text-secondary);
+    border-left: 3px solid var(--accent-green);
+    padding-left: 1.5rem;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+}
+
+.essay-body p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.essay-body h2 {
+    font-family: var(--font-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 0;
+    padding-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.essay-sources {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.essay-sources h2 {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.sources-list {
+    list-style: none;
+    padding: 0;
+}
+
+.sources-list li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+}
+
+.sources-list a {
+    color: var(--accent-green);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.sources-list a:hover {
+    text-decoration: underline;
+    color: var(--accent-pink);
+}
+
 /* Contact Section */
 .contact-section {
     text-align: center;

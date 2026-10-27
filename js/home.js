@@ -87,7 +87,7 @@ function renderBooks() {
 
 function renderContact() {
     $('.contact-links').innerHTML = data.contactLinks.map(link => {
-        const href = link.email ? `mailto:${link.email.replace(' [at] ', '@')}` : link.href;
+        const href = link.email ? `mailto:${link.email}` : link.href;
         return `<a ${linkAttrs(href)} class="contact-link" title="${link.email || link.label}">${icon(link.icon)}</a>`;
     }).join('');
 }

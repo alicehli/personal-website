@@ -9,7 +9,7 @@ export default {
         tagline: "software + stories",
     },
 
-    // Contact icons. `email` is kept obfuscated here and turned into a mailto: link at render time.
+    // Contact icons. `email` is deliberately written as "[at]" (anti-spam) and used as-is.
     contactLinks: [
         { label: "Email", icon: "mail", email: "alicehli999 [at] gmail.com" },
         { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/in/alicehli/" },

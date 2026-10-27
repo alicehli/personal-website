@@ -1,27 +1,31 @@
 /**
  * Portfolio Data
- * All content data for the portfolio site
+ * All content for the site lives here; the JS modules only render it.
  */
 
-const portfolioData = {
+export default {
     personal: {
-        name: "Alice Li",
-        subtitle: "Engineer + Storyteller",
         location: "NYC",
         tagline: "software + stories",
-        email: "alicehli999 [at] gmail.com",
-        linkedin: "https://www.linkedin.com/in/alicehli/",
-        github: "https://github.com/alicehli",
-        goodreads: "https://www.goodreads.com/alicehl",
     },
+
+    // Contact icons. `email` is kept obfuscated here and turned into a mailto: link at render time.
+    contactLinks: [
+        { label: "Email", icon: "mail", email: "alicehli999 [at] gmail.com" },
+        { label: "LinkedIn", icon: "linkedin", href: "https://www.linkedin.com/in/alicehli/" },
+        { label: "GitHub", icon: "github", href: "https://github.com/alicehli" },
+        { label: "Goodreads", icon: "goodreads", href: "https://www.goodreads.com/alicehl" },
+    ],
 
     // Hero Section
     hero: {
         subtitle: "Welcome to my little corner of the internet C:",
         title: {
             text: "My little",
-            accent1: { text: "gallery", color: "green" },
-            accent2: { text: "notebook", color: "pink" }
+            accents: [
+                { text: "gallery", color: "green" },
+                { text: "notebook", color: "pink" },
+            ],
         },
         // Typewriter rotating text
         typewriter: {
@@ -35,6 +39,11 @@ const portfolioData = {
             ],
         },
         description: "I love to read, write, dabble in arts and photography, and push myself to the physical limit. I studied Politics and Government at Sciences Po Paris, and Computer Science and International Business at the University of British Columbia.",
+        // Phrases in the description to colour, mapped to an accent colour
+        highlights: {
+            "Politics and Government": "pink",
+            "Computer Science and International Business": "green",
+        },
         // Currently working on - rotating bubble
         currentlyWorkingOn: [
             "Skiing double blacks",
@@ -77,7 +86,6 @@ const portfolioData = {
         }
     ],
 
-
     // Favorite Books List (with Goodreads URLs)
     favoriteBooks: [
         { title: "My Friends", author: "Fredrik Backman", goodreadsUrl: "https://www.goodreads.com/book/show/217163697-my-friends", coverUrl: "images/book-covers/my-friends.png" },
@@ -118,16 +126,17 @@ const portfolioData = {
         { slug: "turkey", title: "Turkey", year: "2025", folder: "images/2025_turkey", cover: "DSC06397.JPG" },
         { slug: "canada", title: "Canada", year: "2025", folder: "images/2025_canada", cover: "DSC03704.JPG" },
         { slug: "dc", title: "Washington, DC", year: "2025", folder: "images/2025_dc", cover: "DSC03411.JPG" },
-        
+
         // Peeps
         { slug: "peeps", title: "Peeps", year: "202X", folder: "images/202X_peeps", cover: "DSC03195.JPG" },
     ],
 
-    // Navigation Buttons
+    // Navigation. A link is active on its own path and anything below it, plus any `activeOn` paths.
+    // Links starting with http(s) open in a new tab.
     navLinks: [
         { href: "/", label: "Home", icon: "home" },
-        { href: "/writing", label: "Writing", icon: "file-text" },
-        { href: "/photography", label: "Photography", icon: "camera" },
-        { href: "https://aliceinstories.com", label: "Books and Reading", icon: "book", external: true }
-    ]
+        { href: "/writing", label: "Writing", icon: "fileText" },
+        { href: "/photography", label: "Photography", icon: "camera", activeOn: ["/gallery"] },
+        { href: "https://aliceinstories.com", label: "Books and Reading", icon: "book" },
+    ],
 };

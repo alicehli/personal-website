@@ -78,6 +78,7 @@ function initBookCard(shelf, byId) {
     card.hidden = true;
     document.body.appendChild(card);
     let active = null;
+    let frame = 0;
 
     function show(el) {
         if (active === el) return;
@@ -102,23 +103,28 @@ function initBookCard(shelf, byId) {
         const y = r.top - h - 12 >= 12 ? r.top - h - 12 : r.bottom + 12;
         card.style.left = `${x}px`;
         card.style.top = `${y}px`;
+        frame = requestAnimationFrame(watch);
     }
 
     function hide() {
+        cancelAnimationFrame(frame);
         active?.classList.remove('active');
         active = null;
         card.hidden = true;
+    }
+
+    // While the card is up, check every frame that its spine is still hovered or
+    // keyboard-focused. Pointer events alone can be missed (a fast flick, the
+    // pointer leaving the window, the page moving under a still pointer).
+    function watch() {
+        if (active.matches(':hover, :focus-visible')) frame = requestAnimationFrame(watch);
+        else hide();
     }
 
     shelf.addEventListener('pointerover', e => {
         const el = e.target.closest('.spine');
         if (el) show(el);
     });
-    // Checked on every move rather than on pointerout, which can be missed when
-    // the spine slides up from under the pointer
-    document.addEventListener('pointermove', e => {
-        if (active && !e.target.closest?.('.spine')) hide();
-    }, { passive: true });
     document.documentElement.addEventListener('pointerleave', hide);
     // Keyboard focus only: a clicked spine keeps focus, and refocusing it when
     // you come back from Goodreads shouldn't bring the card back

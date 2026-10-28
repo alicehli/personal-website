@@ -7,6 +7,7 @@ import { icon } from './icons.js';
 import { $, linkAttrs } from './dom.js';
 
 const CYCLE_OUT_MS = 220;   // how long the old word takes to slide out
+const FIRST_PHOTO_DELAY_MS = 1000;   // matches the hero text fading in
 
 // Photos on the pile cover roughly the same area whatever their shape: a photo's
 // width is sqrt(aspect ratio) times a square's, kept within these bounds so very
@@ -132,15 +133,6 @@ function renderHeroNotes() {
     const pile = document.createElement('div');
     pile.className = 'photo-pile';
     notes.after(pile);
-
-    // Height of the text the pile sits beside, which caps its size (see .photo-pile)
-    const intro = $('.hero-intro');
-    const text = $('.hero-notes-text', notes);
-    const measure = new ResizeObserver(() => {
-        const room = text.getBoundingClientRect().bottom - intro.getBoundingClientRect().top;
-        pile.style.setProperty('--pile-room', `${Math.round(room)}px`);
-    });
-    [intro, notes].forEach(el => measure.observe(el));
     let top = 0;
     let active = null;
 
@@ -189,6 +181,9 @@ function renderHeroNotes() {
     });
     notes.addEventListener('focusout', deactivate);
 
-    // Start with the first place already on the pile so the column isn't empty
-    addToPile(0, false);
+    // Drop and develop the first place once the text has faded in, so the column
+    // isn't empty (unless a hover has already put something there)
+    setTimeout(() => {
+        if (!pile.children.length) addToPile(0);
+    }, FIRST_PHOTO_DELAY_MS);
 }

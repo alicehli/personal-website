@@ -91,7 +91,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 3.5rem;
     font-weight: 600;
     line-height: 1.1;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     opacity: 0;
     animation: fadeInUp 1s ease 0.4s forwards;
 }
@@ -180,7 +180,8 @@ nav {
 .hero {
     display: grid;
     grid-template-columns: 1fr;
-    padding: var(--section-padding);
+    /* Little space above, so the whole hero fits on one screen */
+    padding: clamp(0.5rem, 2vh, 3rem) 3rem 4rem;
     max-width: var(--page-max);
     margin: 0 auto;
     align-items: start;
@@ -195,7 +196,6 @@ nav {
     grid-template-rows: repeat(6, auto) 1fr;
     column-gap: clamp(2rem, 4vw, 5rem);
     align-items: start;
-    padding-top: 2rem;
 }
 
 .hero-content > * {
@@ -213,17 +213,17 @@ nav {
     color: var(--text-muted);
     text-transform: lowercase;
     letter-spacing: 0.5px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     opacity: 0;
     animation: fadeInUp 1s ease 0.2s forwards;
 }
 
 .hero-description {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    max-width: 600px;
+    max-width: 680px;
     line-height: 1.6;
     opacity: 0;
     animation: fadeInUp 1s ease 0.8s forwards;
@@ -234,14 +234,14 @@ nav {
     max-width: 34em;
     font-size: clamp(1.1rem, 0.8rem + 0.35vw, 1.35rem);
     color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
     opacity: 0;
     animation: fadeInUp 1s ease 0.9s forwards;
 }
 
 .hero-notes p {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
 }
 
 .hero-notes ul {
@@ -275,19 +275,15 @@ nav {
     outline: none;
 }
 
-/* Square, centred in the column right of the text, and sticky so it follows you
-   down the lists. As wide as the column allows, but it always stays a few rem
-   shorter than the text beside it (--pile-room, set in home.js): that leaves it
-   room to move at every window size, so it never switches between scrolling
-   away and sticking as the window is resized. The polaroids are sized in cqw
-   (percent of the pile's width) so they scale with it */
+/* Square, centred in the column right of the text: as wide as that column allows,
+   but short enough that the whole hero fits on one screen. The polaroids are
+   sized in cqw (percent of the pile's width) so they scale with it */
 .photo-pile {
     grid-column: 2;
     grid-row: 3 / -1;
-    position: sticky;
-    top: 6rem;
+    position: relative;
     justify-self: center;
-    width: min(100%, 880px, 100vh - 15rem, var(--pile-room, 100vh) - 10rem);
+    width: min(100%, 880px, 100vh - 16rem);
     aspect-ratio: 1;
     container-type: inline-size;
 }
@@ -370,8 +366,6 @@ nav {
     .photo-pile {
         grid-column: 1;
         grid-row: auto;
-        position: relative;
-        top: 0;
         width: min(100%, 480px);
         margin-bottom: 1.5rem;
     }
@@ -394,7 +388,7 @@ nav {
     font-size: 1.5rem;
     color: var(--text-secondary);
     line-height: 1.6;
-    margin: 2.5rem 0 2rem;
+    margin: 1rem 0;
     opacity: 0;
     animation: fadeInUp 1s ease 0.6s forwards;
 }
@@ -670,6 +664,11 @@ nav {
     border-radius: var(--border-radius);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
     pointer-events: none;
+}
+
+/* display: flex above would otherwise override the hidden attribute */
+.book-card[hidden] {
+    display: none;
 }
 
 .book-card img {

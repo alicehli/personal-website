@@ -487,6 +487,7 @@ nav {
 .hero-meta {
     display: flex;
     align-items: center;
+    margin-top: 1rem;
     opacity: 0;
     animation: fadeInUp 1s ease 1s forwards;
 }

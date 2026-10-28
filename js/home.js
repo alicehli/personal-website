@@ -108,21 +108,26 @@ function renderIntro() {
     restartTimer();
 }
 
+// Resolves once the photo is decoded (or the video has its first frame), so a
+// polaroid can go on the pile at its final size rather than growing as it loads
+function whenReady(media) {
+    if (media.tagName !== 'VIDEO') return media.decode().catch(() => {});
+    if (media.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) return Promise.resolve();
+    return new Promise(resolve => {
+        media.addEventListener('loadeddata', resolve, { once: true });
+        media.addEventListener('error', resolve, { once: true });
+    });
+}
+
 // Sets --k on `card`: its width relative to a square photo (CSS turns that into
 // pixels from the pile's current width)
 function sizeByArea(card, media) {
-    const fit = (w, h) => {
-        const scale = Math.sqrt(w / h);
-        card.style.setProperty('--k', Math.min(PILE_MAX_SCALE, Math.max(PILE_MIN_SCALE, scale)).toFixed(3));
-    };
-    if (media.tagName === 'VIDEO') {
-        if (media.videoWidth) fit(media.videoWidth, media.videoHeight);
-        else media.addEventListener('loadedmetadata', () => fit(media.videoWidth, media.videoHeight), { once: true });
-    } else if (media.complete && media.naturalWidth) {
-        fit(media.naturalWidth, media.naturalHeight);
-    } else {
-        media.addEventListener('load', () => fit(media.naturalWidth, media.naturalHeight), { once: true });
-    }
+    const [w, h] = media.tagName === 'VIDEO'
+        ? [media.videoWidth, media.videoHeight]
+        : [media.naturalWidth, media.naturalHeight];
+    if (!w || !h) return;
+    const scale = Math.sqrt(w / h);
+    card.style.setProperty('--k', Math.min(PILE_MAX_SCALE, Math.max(PILE_MIN_SCALE, scale)).toFixed(3));
 }
 
 /**
@@ -169,24 +174,33 @@ function renderHeroNotes() {
     const pile = document.createElement('div');
     pile.className = 'photo-pile';
     notes.after(pile);
+    const cards = new Map();   // shot index -> polaroid, including ones still loading
     let top = 0;
     let active = null;
 
-    function addToPile(i, animate = true) {
-        let card = $(`[data-shot="${i}"]`, pile);
+    // The card's place in the stack is set when it's asked for, so a slow photo
+    // that finishes loading later lands under anything hovered since
+    function addToPile(i) {
+        let card = cards.get(i);
         if (!card) {
             const shot = shots[i];
-            const tilt = PILE_TILT[pile.children.length % PILE_TILT.length];
+            const tilt = PILE_TILT[cards.size % PILE_TILT.length];
             card = document.createElement('div');
-            card.className = `pile-polaroid${animate ? ' dropping' : ''}`;
+            card.className = 'pile-polaroid dropping';
             card.dataset.shot = i;
             card.style.cssText = `--r: ${tilt.r}deg; --x: ${tilt.x}px; --y: ${tilt.y}px`;
             card.innerHTML = `${shot.video
                 ? `<video src="${shot.video}" muted loop playsinline autoplay aria-label="${shot.alt}"></video>`
                 : `<img src="${shot.photo}" alt="${shot.alt}" />`}
                 <span class="polaroid-caption">${shot.caption}</span>`;
-            sizeByArea(card, $('img, video', card));
-            pile.appendChild(card);
+            cards.set(i, card);
+            const media = $('img, video', card);
+            whenReady(media).then(() => {
+                sizeByArea(card, media);
+                pile.appendChild(card);
+                // autoplay doesn't start a video that loaded off the page
+                if (shot.video) media.play().catch(() => {});
+            });
         }
         card.style.zIndex = ++top;
     }
@@ -220,6 +234,11 @@ function renderHeroNotes() {
     // Drop and develop the first place once the text has faded in, so the column
     // isn't empty (unless a hover has already put something there)
     setTimeout(() => {
-        if (!pile.children.length) addToPile(0);
+        if (!cards.size) addToPile(0);
     }, FIRST_PHOTO_DELAY_MS);
+
+    // Fetch the other photos in the background so hovering one shows it straight away
+    addEventListener('load', () => {
+        shots.forEach(shot => { if (shot.photo) new Image().src = shot.photo; });
+    }, { once: true });
 }

@@ -36,7 +36,7 @@ const groupBy = (list, key) => list.reduce((groups, item) => {
 function spine(book) {
     return `<a class="spine${book.rating === 5 ? ' five-star' : ''}" href="${book.url}" target="_blank" rel="noopener noreferrer"
         data-id="${book.id}" aria-label="${esc(book.title)} by ${esc(book.author)}"
-        style="width: ${spineWidth(book)}px; height: ${spineHeight(book)}px; --spine: ${book.color}; --ink: ${book.ink}">${esc(shortTitle(book.title))}</a>`;
+        style="width: ${spineWidth(book)}px; height: ${spineHeight(book)}px; --spine: ${book.color}; --ink: ${book.ink}"><span class="spine-face">${esc(shortTitle(book.title))}</span></a>`;
 }
 
 function shelfRow(year, books) {

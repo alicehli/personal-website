@@ -94,23 +94,23 @@ export default {
         {
           text: "been perfecting my backflip",
           video: "images/backflip.mp4",
-          caption: "Backflip practice",
+          caption: "Getting there eventually, I hope",
         },
         { text: "been preparing for my third half marathon of 2026" },
         {
           text: "climbed Half Dome",
           photo: "images/halfdome.png",
-          caption: "Half Dome",
+          caption: "The cables were horrifying!",
         },
         {
           text: "completed the Salkantay Trek in Peru",
           photo: "images/salkantay.jpg",
-          caption: "Salkantay Pass, 4,600 m",
+          caption: "4,600 metres of elevation!",
         },
         {
           text: "bungee jumped in Montreal",
           video: "images/bungee-montreal.mp4",
-          caption: "Fun fact, I bungee jump every year. This is year four!",
+          caption: "This is my fourth year of annual bungee jumping!",
         },
       ],
     },

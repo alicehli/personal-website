@@ -44,11 +44,11 @@ export default {
     // Stretchtext: each {key} shows its `label`, and clicking it swaps in `more`
     // (which must start with the label)
     description: {
-      text: "I {love}. I studied {politics} and {cs}.",
+      text: "I love {arts}. I studied {politics} and {cs}.",
       expand: {
-        love: {
-          label: "love to",
-          more: "love to read, write, dabble in arts and photography, and watch Broadway shows",
+        arts: {
+          label: "the arts",
+          more: "the arts: reading, writing, dabbling in photography, and watching Broadway shows",
           color: "green",
         },
         politics: {

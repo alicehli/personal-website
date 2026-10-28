@@ -313,12 +313,17 @@ nav {
     outline: none;
 }
 
-/* Square, centred in the column right of the text: as wide as that column allows,
-   but short enough that the whole hero fits on one screen. The polaroids are
-   sized in cqw (percent of the pile's width) so they scale with it */
+/* Square, in the column right of the text: as wide as that column allows, but
+   short enough that the whole hero fits on one screen. When it's shorter than the
+   text (narrow windows) it's centred beside the description and lists; when it's
+   taller, the negative margin (about the intro line's height) lets it start level
+   with the intro instead of pushing past the bottom of the screen. The polaroids
+   are sized in cqw (percent of the pile's width) so they scale with it */
 .photo-pile {
     grid-column: 2;
-    grid-row: 3 / -1;
+    grid-row: 4 / -1;
+    align-self: center;
+    margin-top: -4.4rem;
     position: relative;
     justify-self: center;
     width: min(100%, 880px, 100vh - 16rem);
@@ -405,6 +410,7 @@ nav {
         grid-column: 1;
         grid-row: auto;
         width: min(100%, 480px);
+        margin-top: 0;
         margin-bottom: 1.5rem;
     }
 }

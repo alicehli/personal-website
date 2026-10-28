@@ -44,7 +44,7 @@ export default {
     // Stretchtext: each {key} shows its `label`, and clicking it swaps in `more`
     // (which must start with the label)
     description: {
-      text: "I love {arts}. I studied {politics} and {cs}.",
+      text: "I'm drawn to {arts}. I studied {politics} and {cs}.",
       expand: {
         arts: {
           label: "the arts",
@@ -66,7 +66,7 @@ export default {
     // Travel list: each `link` opens a polaroid of `photo` on hover
     travel: {
       intro:
-        "I love to travel. I've been to 32 countries, and <i>recently</i> I've:",
+        "I'm always planning my next trip. I've been to 32 countries, and <i>recently</i> I've:",
       items: [
         {
           before: "walked to ",
@@ -104,7 +104,7 @@ export default {
     },
     // Type 2 fun list: items with a `video` or `photo` go on the polaroid pile too
     type2Fun: {
-      intro: "I also love type 2 (2.5?) fun. <i>Lately</i>, I've:",
+      intro: "I'm also a sucker for type 2 (2.5?) fun. <i>Lately</i>, I've:",
       items: [
         {
           text: "been perfecting my backflip",

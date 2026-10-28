@@ -275,16 +275,19 @@ nav {
     outline: none;
 }
 
-/* Square, centred in the column right of the text: as wide as that column allows,
-   but short enough to fit on the first screen. It scrolls with the text rather
-   than sticking, so resizing the window never makes it jump. The polaroids are
-   sized in cqw (percent of the pile's width) so they scale with it */
+/* Square, centred in the column right of the text, and sticky so it follows you
+   down the lists. As wide as the column allows, but it always stays a few rem
+   shorter than the text beside it (--pile-room, set in home.js): that leaves it
+   room to move at every window size, so it never switches between scrolling
+   away and sticking as the window is resized. The polaroids are sized in cqw
+   (percent of the pile's width) so they scale with it */
 .photo-pile {
     grid-column: 2;
     grid-row: 3 / -1;
-    position: relative;
+    position: sticky;
+    top: 6rem;
     justify-self: center;
-    width: min(100%, 880px, 100vh - 15rem);
+    width: min(100%, 880px, 100vh - 15rem, var(--pile-room, 100vh) - 10rem);
     aspect-ratio: 1;
     container-type: inline-size;
 }
@@ -367,6 +370,8 @@ nav {
     .photo-pile {
         grid-column: 1;
         grid-row: auto;
+        position: relative;
+        top: 0;
         width: min(100%, 480px);
         margin-bottom: 1.5rem;
     }

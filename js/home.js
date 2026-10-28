@@ -132,6 +132,15 @@ function renderHeroNotes() {
     const pile = document.createElement('div');
     pile.className = 'photo-pile';
     notes.after(pile);
+
+    // Height of the text the pile sits beside, which caps its size (see .photo-pile)
+    const intro = $('.hero-intro');
+    const text = $('.hero-notes-text', notes);
+    const measure = new ResizeObserver(() => {
+        const room = text.getBoundingClientRect().bottom - intro.getBoundingClientRect().top;
+        pile.style.setProperty('--pile-room', `${Math.round(room)}px`);
+    });
+    [intro, notes].forEach(el => measure.observe(el));
     let top = 0;
     let active = null;
 

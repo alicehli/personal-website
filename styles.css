@@ -99,6 +99,11 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
+/* A sentence rather than a title, so it matches the hero intro line */
+#bookshelf .section-title {
+    font-size: 1.5rem;
+}
+
 .accent-green { color: var(--accent-green); }
 .accent-pink { color: var(--accent-pink); }
 
@@ -186,7 +191,7 @@ nav {
 
 .hero-subtitle {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-muted);
     text-transform: lowercase;
     letter-spacing: 0.5px;
@@ -273,7 +278,7 @@ nav {
     top: 50%;
     left: 50%;
     width: calc(var(--k, 1) * 60cqw + 24px);
-    padding: 12px 12px 50px;
+    padding: 12px 12px 10px;
     background: #fdfdfb;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r));
@@ -308,11 +313,12 @@ nav {
     animation: polaroidDevelop 1.6s ease-out;
 }
 
+/* Sits under the photo; long captions wrap onto more lines */
 .polaroid-caption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 8px;
+    display: block;
+    min-height: 1.8em;
+    margin-top: 6px;
+    line-height: 1.15;
     text-align: center;
     font-family: 'Caveat', 'Bradley Hand', cursive;
     font-size: 1.5rem;
@@ -382,9 +388,14 @@ nav {
     border-radius: 6px;
     background: none;
     font: inherit;
+    font-weight: 600;
     color: var(--accent-green);
     cursor: pointer;
     transition: background var(--transition-fast);
+}
+
+.cycle-word.pink {
+    color: var(--accent-pink);
 }
 
 .cycle-word:hover,
@@ -420,23 +431,9 @@ nav {
 
 .hero-meta {
     display: flex;
-    gap: 2rem;
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    color: var(--text-muted);
+    align-items: center;
     opacity: 0;
     animation: fadeInUp 1s ease 1s forwards;
-    align-items: center;
-}
-
-.hero-meta svg {
-    opacity: 0.6;
-}
-
-.icon-inline {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 4px;
 }
 
 /* Sections */
@@ -452,183 +449,11 @@ nav {
 
 .section-subtitle {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: var(--text-muted);
     text-transform: lowercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.5rem;
-}
-
-/* Reading Section */
-.reading-widget {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-large);
-    padding: var(--card-padding);
-}
-
-.reading-widget-footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    text-align: center;
-    text-transform: lowercase;
-    letter-spacing: 0.3px;
-}
-
-.reading-widget-footer a {
-    color: var(--accent-pink);
-    text-decoration: none;
-    transition: var(--transition-fast);
-}
-
-.reading-widget-footer a:hover {
-    color: var(--accent-green);
-    text-decoration: underline;
-}
-
-/* Books Carousel */
-.books-carousel-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-.books-carousel {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    padding: 1rem 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-green) var(--bg-secondary);
-    -webkit-overflow-scrolling: touch;
-}
-
-.books-carousel::-webkit-scrollbar {
-    height: 8px;
-}
-
-.books-carousel::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-    border-radius: 4px;
-}
-
-.books-carousel::-webkit-scrollbar-thumb {
-    background: var(--accent-green);
-    border-radius: 4px;
-}
-
-.books-carousel::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-pink);
-}
-
-.book-item-carousel {
-    flex: 0 0 160px;
-    min-width: 160px;
-}
-
-.book-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    transition: var(--transition-fast);
-    border-radius: var(--border-radius);
-    padding: 0.5rem;
-    margin: -0.5rem;
-}
-
-.book-link:hover {
-    background: var(--hover);
-    transform: translateY(-4px);
-}
-
-.book-cover-carousel {
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    background: var(--bg-secondary);
-    margin-bottom: 0.75rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: var(--transition-fast);
-}
-
-.book-link:hover .book-cover-carousel {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: scale(1.02);
-}
-
-.book-cover-carousel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.book-cover-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, var(--accent-green), var(--accent-pink));
-    color: white;
-    font-family: var(--font-primary);
-}
-
-.book-info-carousel {
-    text-align: left;
-}
-
-.book-title-carousel {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.25rem;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.6em;
-}
-
-.book-author-carousel {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-@media (max-width: 768px) {
-    .book-item-carousel {
-        flex: 0 0 140px;
-        min-width: 140px;
-    }
-    
-    .books-carousel {
-        gap: 1rem;
-    }
-    
-    .book-title-carousel {
-        font-size: 0.9rem;
-    }
-    
-    .book-author-carousel {
-        font-size: 0.8rem;
-    }
 }
 
 /* Placeholder text ("Coming soon", "Trip not found") */
@@ -701,6 +526,161 @@ nav {
 .sources-list a:hover {
     text-decoration: underline;
     color: var(--accent-pink);
+}
+
+/* Bookshelf: a shelf per year, spines coloured from their covers */
+.bookshelf {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);   /* lets long years scroll instead of widening the page */
+    gap: 2.5rem;
+}
+
+.shelf-label {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.shelf-label-year {
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Long years scroll sideways; the top padding leaves room for hovered spines to lift */
+.shelf-scroll {
+    overflow-x: auto;
+    padding-top: 16px;
+}
+
+.shelf {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    width: max-content;
+    min-width: 100%;
+    padding: 0 6px;
+    border-bottom: 3px solid var(--text-primary);
+    margin-bottom: 26px;
+}
+
+.shelf-month {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.shelf-month-label {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* Text runs bottom to top, like a real spine */
+.spine {
+    position: relative;
+    display: block;
+    padding: 8px 0;
+    overflow: hidden;
+    writing-mode: vertical-rl;
+    text-orientation: sideways;   /* turn every glyph, including curly quotes */
+    transform: rotate(180deg);
+    border-radius: 2px 2px 0 0;
+    background: var(--spine);
+    color: var(--ink);
+    box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.18), inset -2px 0 0 rgba(0, 0, 0, 0.18);
+    font-size: 11px;
+    line-height: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    transition: translate var(--transition-fast);
+}
+
+.spine:hover,
+.spine:focus-visible,
+.spine.active {
+    translate: 0 -10px;
+    outline: none;
+}
+
+/* Five-star books: a pink ribbon hanging from the top (the spine is rotated, so "bottom") */
+.spine.five-star::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    width: 5px;
+    height: 14px;
+    background: var(--accent-pink);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);
+    transform: rotate(180deg);
+}
+
+.book-card {
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    width: min(320px, calc(100vw - 24px));
+    padding: 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+    pointer-events: none;
+}
+
+.book-card img {
+    width: 72px;
+    flex: none;
+    border-radius: 3px;
+}
+
+.book-card-text {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.book-card-title {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.book-card-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.book-card-stars {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--accent-pink);
+}
+
+.book-card-stars-empty {
+    opacity: 0.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spine {
+        transition: none;
+    }
 }
 
 /* Contact icons, in the hero meta line */

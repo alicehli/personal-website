@@ -1,5 +1,5 @@
 /**
- * Home page: hero (with contact links) and book carousel.
+ * Home page: hero with contact links, travel notes and photo pile.
  */
 
 import data from './data.js';
@@ -19,7 +19,6 @@ export function renderHome() {
     renderHero();
     renderIntro();
     renderHeroNotes();
-    renderBooks();
 }
 
 const accent = (text, color) => `<span class="accent-${color}">${text}</span>`;
@@ -30,7 +29,7 @@ const contactLink = link => {
 };
 
 function renderHero() {
-    const { hero, personal } = data;
+    const { hero } = data;
 
     $('.hero-subtitle').textContent = hero.subtitle;
     $('.hero-title').innerHTML =
@@ -40,8 +39,6 @@ function renderHero() {
         .reduce((html, [phrase, color]) => html.replace(phrase, accent(phrase, color)), hero.description);
 
     $('.hero-meta').innerHTML = `
-        <span><span class="icon-inline">${icon('mapPin', 12)}</span> ${personal.location}</span>
-        <span>• ${personal.tagline}</span>
         <span class="contact-links">${data.contactLinks.map(contactLink).join('')}</span>
     `;
 }
@@ -66,6 +63,7 @@ function renderIntro() {
         setTimeout(() => {
             index = (index + 1) % words.length;
             word.textContent = words[index];
+            button.classList.toggle('pink', index % 2 === 1);   // alternate green and pink
             button.classList.replace('leaving', 'entering');
             // Two frames so the browser paints the entering position before sliding in
             requestAnimationFrame(() => requestAnimationFrame(() => button.classList.remove('entering')));
@@ -182,22 +180,4 @@ function renderHeroNotes() {
 
     // Start with the first place already on the pile so the column isn't empty
     addToPile(0, false);
-}
-
-function renderBooks() {
-    $('.books-carousel').innerHTML = data.favoriteBooks.map(book => `
-        <div class="book-item-carousel">
-            <a href="${book.goodreadsUrl}" class="book-link">
-                <div class="book-cover-carousel">
-                    ${book.coverUrl
-                        ? `<img src="${book.coverUrl}" alt="${book.title}" loading="lazy" />`
-                        : `<div class="book-cover-placeholder">${book.title.charAt(0)}</div>`}
-                </div>
-                <div class="book-info-carousel">
-                    <div class="book-title-carousel" title="${book.title}">${book.title}</div>
-                    <div class="book-author-carousel">${book.author}</div>
-                </div>
-            </a>
-        </div>
-    `).join('');
 }

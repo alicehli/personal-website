@@ -89,7 +89,7 @@ function sizeByArea(card, media) {
 }
 
 /**
- * Travel and type 2 fun lists, with a photo pile in a column to their right.
+ * Travel and type 2 fun lists, with a photo pile in the hero's right-hand column.
  * Hovering (or focusing, or tapping) an underlined phrase drops its polaroid on
  * top of the pile, where it develops; one already on the pile comes back to the top.
  */
@@ -126,10 +126,12 @@ function renderHeroNotes() {
             <p>${type2Fun.intro}</p>
             <ul>${type2Fun.items.map(item => `<li>${funLine(item)}</li>`).join('')}</ul>
         </div>
-        <div class="photo-pile"></div>
     `;
 
-    const pile = $('.photo-pile', notes);
+    // The pile sits beside the whole hero, not just these lists (see .hero-content)
+    const pile = document.createElement('div');
+    pile.className = 'photo-pile';
+    notes.after(pile);
     let top = 0;
     let active = null;
 

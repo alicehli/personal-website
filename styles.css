@@ -3,6 +3,8 @@
    ========================================================================== */
 
 :root {
+    /* Page width: grows on big monitors so the hero and shelf use the space */
+    --page-max: clamp(1400px, 85vw, 1800px);
     /* Colors - Light Mode */
     --bg-primary: #ffffff;
     --bg-secondary: #f8f9fa;
@@ -114,7 +116,7 @@ nav {
     align-items: center;
     position: relative;
     padding: 1rem 2rem;
-    max-width: 1400px;
+    max-width: var(--page-max);
     margin: 0 auto;
 }
 
@@ -179,14 +181,30 @@ nav {
     display: grid;
     grid-template-columns: 1fr;
     padding: var(--section-padding);
-    max-width: 1400px;
+    max-width: var(--page-max);
     margin: 0 auto;
     align-items: start;
     min-height: 80vh;
 }
 
+/* Text on the left; from the intro line down, the photo pile on the right. The
+   last row takes up any extra height so a tall pile doesn't spread the text out */
 .hero-content {
+    display: grid;
+    grid-template-columns: minmax(0, clamp(600px, 42vw, 760px)) minmax(320px, 1fr);
+    grid-template-rows: repeat(6, auto) 1fr;
+    column-gap: clamp(2rem, 4vw, 5rem);
+    align-items: start;
     padding-top: 2rem;
+}
+
+.hero-content > * {
+    grid-column: 1;
+}
+
+.hero-content > .hero-subtitle,
+.hero-content > .hero-title {
+    grid-column: 1 / -1;
 }
 
 .hero-subtitle {
@@ -211,13 +229,10 @@ nav {
     animation: fadeInUp 1s ease 0.8s forwards;
 }
 
-/* Travel and type 2 fun lists, with a photo pile to their right */
+/* Travel and type 2 fun lists */
 .hero-notes {
-    display: grid;
-    grid-template-columns: minmax(0, 600px) minmax(320px, 1fr);
-    gap: 2rem;
-    align-items: start;
-    font-size: 1.1rem;
+    max-width: 34em;
+    font-size: clamp(1.1rem, 0.8rem + 0.35vw, 1.35rem);
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -260,15 +275,17 @@ nav {
     outline: none;
 }
 
-/* Square, centred in the space right of the text, and at most 400px; the
-   polaroids are sized in cqw (percent of the pile's width) so they scale with it */
+/* Square, centred in the column right of the text: as wide as that column allows,
+   but short enough to fit on screen while it sticks. The polaroids are sized in
+   cqw (percent of the pile's width) so they scale with it */
 .photo-pile {
+    grid-column: 2;
+    grid-row: 3 / -1;
     position: sticky;
     top: 6rem;
     justify-self: center;
-    width: min(100%, 400px);
+    width: min(100%, 880px, 100vh - 15rem);
     aspect-ratio: 1;
-    margin-top: -3rem;
     container-type: inline-size;
 }
 
@@ -342,15 +359,18 @@ nav {
 }
 
 @media (max-width: 900px) {
-    .hero-notes {
-        grid-template-columns: minmax(0, 600px);
-        gap: 1rem;
+    .hero-content {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: none;
     }
 
     .photo-pile {
+        grid-column: 1;
+        grid-row: auto;
         position: relative;
         top: 0;
-        margin-top: 0;
+        width: min(100%, 480px);
+        margin-bottom: 1.5rem;
     }
 }
 
@@ -439,7 +459,7 @@ nav {
 /* Sections */
 .portfolio-section {
     padding: var(--section-padding);
-    max-width: 1400px;
+    max-width: var(--page-max);
     margin: 0 auto;
 }
 

@@ -7,6 +7,7 @@ import { icon } from './icons.js';
 import { $, linkAttrs } from './dom.js';
 
 const CYCLE_OUT_MS = 220;   // how long the old word takes to slide out
+const CYCLE_EVERY_MS = 2800;   // auto-rotation; a click moves on now and restarts the count
 const FIRST_PHOTO_DELAY_MS = 1000;   // matches the hero text fading in
 
 // Photos on the pile cover roughly the same area whatever their shape: a photo's
@@ -36,8 +37,7 @@ function renderHero() {
     $('.hero-title').innerHTML =
         `${hero.title.text} ${hero.title.accents.map(a => accent(a.text, a.color)).join(' / ')}`;
 
-    $('.hero-description').innerHTML = Object.entries(hero.highlights || {})
-        .reduce((html, [phrase, color]) => html.replace(phrase, accent(phrase, color)), hero.description);
+    renderDescription(hero.description);
 
     $('.hero-meta').innerHTML = `
         <span class="contact-links">${data.contactLinks.map(contactLink).join('')}</span>
@@ -45,8 +45,29 @@ function renderHero() {
 }
 
 /**
- * "I'm a ___ in NYC." Clicking the word slides it out and the next one in. The
- * button is as wide as the longest word, so the rest of the line never moves.
+ * Stretchtext: a short sentence whose coloured phrases open up into the longer
+ * version when clicked.
+ */
+function renderDescription({ text, expand }) {
+    const description = $('.hero-description');
+    description.innerHTML = text.replace(/\{(\w+)\}/g, (_, key) =>
+        `<button class="stretch accent-${expand[key].color}" type="button" data-key="${key}">${expand[key].label}</button>`);
+
+    description.addEventListener('click', e => {
+        const button = e.target.closest('.stretch');
+        if (!button) return;
+        // The phrase keeps its colour; the words it opens up into are plain
+        const { label, more, color } = expand[button.dataset.key];
+        const grown = document.createElement('span');
+        grown.className = 'stretched';
+        grown.innerHTML = `${accent(label, color)}${more.slice(label.length)}`;
+        button.replaceWith(grown);
+    });
+}
+
+/**
+ * "I'm a ___ in NYC." The word slides out and the next one in every few seconds,
+ * or on click. The button is as wide as the longest word, so the line never moves.
  */
 function renderIntro() {
     const { prefix, words, suffix } = data.hero.intro;
@@ -57,8 +78,17 @@ function renderIntro() {
     const button = $('.cycle-word', intro);
     const word = $('.cycle-current', button);
     let index = 0;
+    let timer;
 
-    button.addEventListener('click', () => {
+    // Rotates on its own (unless the visitor prefers less motion); a click
+    // moves on straight away and restarts the countdown
+    const autoRotate = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const restartTimer = () => {
+        clearInterval(timer);
+        if (autoRotate) timer = setInterval(next, CYCLE_EVERY_MS);
+    };
+
+    function next() {
         if (button.classList.contains('leaving')) return;
         button.classList.add('leaving');
         setTimeout(() => {
@@ -69,7 +99,13 @@ function renderIntro() {
             // Two frames so the browser paints the entering position before sliding in
             requestAnimationFrame(() => requestAnimationFrame(() => button.classList.remove('entering')));
         }, CYCLE_OUT_MS);
+    }
+
+    button.addEventListener('click', () => {
+        next();
+        restartTimer();
     });
+    restartTimer();
 }
 
 // Sets --k on `card`: its width relative to a square photo (CSS turns that into

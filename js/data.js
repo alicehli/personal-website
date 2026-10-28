@@ -30,7 +30,7 @@ export default {
         { text: "notebook", color: "pink" },
       ],
     },
-    // Intro line: clicking the word cycles through `words`
+    // Intro line: the word rotates through `words` on its own, and on click
     intro: {
       prefix: "Hello, I'm Alice! I'm a ",
       suffix: " in NYC.",
@@ -41,12 +41,27 @@ export default {
         "fitness enthusiast",
       ],
     },
-    description:
-      "I love to read, write, dabble in arts and photography, and watch Broadway shows. I studied Politics and Government at Sciences Po Paris, and Computer Science and International Business at the University of British Columbia.",
-    // Phrases in the description to colour, mapped to an accent colour
-    highlights: {
-      "Politics and Government": "pink",
-      "Computer Science and International Business": "green",
+    // Stretchtext: each {key} shows its `label`, and clicking it swaps in `more`
+    // (which must start with the label)
+    description: {
+      text: "I {love}. I studied {politics} and {cs}.",
+      expand: {
+        love: {
+          label: "love to",
+          more: "love to read, write, dabble in arts and photography, and watch Broadway shows",
+          color: "green",
+        },
+        politics: {
+          label: "Politics and Government",
+          more: "Politics and Government at Sciences Po Paris, in France,",
+          color: "pink",
+        },
+        cs: {
+          label: "Computer Science and International Business",
+          more: "Computer Science and International Business at the University of British Columbia",
+          color: "green",
+        },
+      },
     },
     // Travel list: each `link` opens a polaroid of `photo` on hover
     travel: {

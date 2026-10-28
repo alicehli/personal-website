@@ -192,7 +192,7 @@ nav {
    last row takes up any extra height so a tall pile doesn't spread the text out */
 .hero-content {
     display: grid;
-    grid-template-columns: minmax(0, clamp(600px, 45%, 760px)) minmax(320px, 1fr);
+    grid-template-columns: minmax(0, clamp(600px, 56%, 1000px)) minmax(320px, 1fr);
     grid-template-rows: repeat(6, auto) 1fr;
     column-gap: clamp(2rem, 4vw, 5rem);
     align-items: start;
@@ -223,15 +223,52 @@ nav {
     color: var(--text-secondary);
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    max-width: 680px;
     line-height: 1.6;
     opacity: 0;
     animation: fadeInUp 1s ease 0.8s forwards;
 }
 
+/* Stretchtext: a coloured phrase with a small "+" that opens into the longer
+   version, which arrives with a brief highlight */
+.stretch {
+    border: 0;
+    padding: 0 2px;
+    font: inherit;
+    background: none;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: underline dashed currentColor;
+    text-underline-offset: 4px;
+    transition: background var(--transition-fast);
+}
+
+.stretch::after {
+    content: "+";
+    margin-left: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    vertical-align: super;
+}
+
+.stretch:hover,
+.stretch:focus-visible {
+    background: var(--hover);
+    outline: none;
+}
+
+.stretched {
+    border-radius: 3px;
+    animation: stretchIn 0.6s ease-out;
+}
+
+@keyframes stretchIn {
+    from {
+        background: color-mix(in srgb, currentColor 18%, transparent);
+    }
+}
+
 /* Travel and type 2 fun lists */
 .hero-notes {
-    max-width: 34em;
     font-size: clamp(1.1rem, 0.8rem + 0.35vw, 1.35rem);
     color: var(--text-secondary);
     line-height: 1.5;

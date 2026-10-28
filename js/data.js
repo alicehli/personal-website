@@ -35,67 +35,93 @@ export default {
         { text: "notebook", color: "pink" },
       ],
     },
-    // Typewriter rotating text
-    typewriter: {
+    // Intro line: clicking the word cycles through `words`
+    intro: {
       prefix: "Hello, I'm Alice! I'm a ",
+      suffix: " in NYC.",
       words: [
         "software engineer",
         "quantitative developer",
-        "Canadian living in NYC",
+        "Canadian",
+        "Christian",
         "lover of books and words",
         "fitness enthusiast",
       ],
     },
     description:
-      "I love to read, write, dabble in arts and photography, and push myself to the physical limit. I studied Politics and Government at Sciences Po Paris, and Computer Science and International Business at the University of British Columbia.",
+      "I love to read, write, dabble in arts and photography, and watch Broadway shows. I studied Politics and Government at Sciences Po Paris, and Computer Science and International Business at the University of British Columbia.",
     // Phrases in the description to colour, mapped to an accent colour
     highlights: {
       "Politics and Government": "pink",
       "Computer Science and International Business": "green",
     },
-    // Currently working on - rotating bubble
-    currentlyWorkingOn: [
-      "Software for readers",
-      "Perfecting my backflip",
-      "Self-learning snowboarding",
-      "Running my third half-marathon of 2026",
-    ],
+    // Travel list: each `link` opens a polaroid of `photo` on hover
+    travel: {
+      intro:
+        "I love to travel. I've been to 32 countries, and <i>recently</i> I've:",
+      items: [
+        {
+          before: "walked to ",
+          link: "Tokyo Tower under the cherry blossoms",
+          after: "",
+          photo: "images/tokyo-tower.jpg",
+          place: "Tokyo, Japan",
+          caption: "Tokyo, 2026",
+        },
+        {
+          before: "watched sunrise from a ",
+          link: "hot air balloon over Cappadocia",
+          after: "",
+          photo: "images/1_balloon.jpg",
+          place: "Cappadocia, Turkey",
+          caption: "Cappadocia, 2025",
+        },
+        {
+          before: "taken a ",
+          link: "weekend trip to Dresden",
+          after: " from Berlin",
+          photo: "images/2_dresden.jpg",
+          place: "Dresden, Germany",
+          caption: "Dresden, 2025",
+        },
+      ],
+      home: {
+        before: "And I always make sure to go ",
+        link: "home to Vancouver",
+        after: ".",
+        photo: "images/4_vancouver.jpg",
+        place: "Vancouver, BC",
+        caption: "Home, 2025",
+      },
+    },
+    // Type 2 fun list: items with a `video` or `photo` go on the polaroid pile too
+    type2Fun: {
+      intro: "I also love type 2 (2.5?) fun. <i>Lately</i>, I've:",
+      items: [
+        {
+          text: "been perfecting my backflip",
+          video: "images/backflip.mp4",
+          caption: "Backflip practice",
+        },
+        { text: "been preparing for my third half marathon of 2026" },
+        {
+          text: "climbed Half Dome",
+          photo: "images/halfdome.png",
+          caption: "Half Dome",
+        },
+        {
+          text: "completed the Salkantay Trek in Peru",
+          photo: "images/salkantay.jpg",
+          caption: "Salkantay Pass, 4,600 m",
+        },
+        {
+          text: "bungee jumped in Montreal",
+          video: "images/bungee-montreal.mp4",
+          caption: "Fun fact, I bungee jump every year. This is year four!",
+        },
+      ],
+    },
   },
-
-  // Hero Photo Grid
-  heroPhotos: [
-    {
-      src: "images/1_balloon.jpg",
-      alt: "Cappadocia",
-      title: "Cappadocia, Turkey",
-      meta: "2025",
-      description:
-        "A hot air balloon ride during sunrise over the stunning landscapes of Cappadocia!",
-    },
-    {
-      src: "images/2_dresden.jpg",
-      alt: "Dresden",
-      title: "Dresden, Germany",
-      meta: "2025",
-      description:
-        "A weekend trip from Berlin to explore some beautiful baroque architecture.",
-    },
-    {
-      src: "images/3_dc.jpg",
-      alt: "Washington, DC",
-      title: "Washington, DC",
-      meta: "2025",
-      description: "The famous cherry blossoms!",
-    },
-    {
-      src: "images/4_vancouver.jpg",
-      alt: "Vancouver, BC",
-      title: "Vancouver, BC",
-      meta: "2025",
-      description:
-        "Cityscape, mountains, the ocean, and incredible food. Home sweet home!",
-    },
-  ],
 
   // Favorite Books List (with Goodreads URLs)
   favoriteBooks: [

@@ -1942,5 +1942,17 @@
     "color": "#5eb4df",
     "ink": "#1a1a1a",
     "url": "https://www.goodreads.com/book/show/30631883"
+  },
+  {
+    "id": "223001257",
+    "title": "The Correspondent",
+    "author": "Virginia Evans",
+    "rating": 4,
+    "read": "2026-10-29",
+    "pages": 304,
+    "cover": "/images/book-covers/goodreads/223001257.jpg",
+    "color": "#e7e0d3",
+    "ink": "#1a1a1a",
+    "url": "https://www.goodreads.com/book/show/223001257"
   }
 ]

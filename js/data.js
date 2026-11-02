@@ -190,6 +190,23 @@ export default {
     },
   ],
 
+  // Books and Reading: little web apps I've built around reading
+  readingProjects: [
+    {
+      title: "Read Roulette",
+      blurb:
+        "Can't pick what to read next? Point it at a Goodreads want-to-read shelf (public RSS or a CSV export) and let it spin.",
+      href: "https://readroulette.alicehli.com",
+      tags: ["Flask", "TypeScript"],
+    },
+  ],
+  // Every book I've ever read, as an interactive constellation
+  galaxy: {
+    href: "https://aliceinstories.com",
+    title: "Explore every book I've ever read",
+    blurb: "as a galaxy of stars",
+  },
+
   // Navigation. A link is active on its own path and anything below it, plus any `activeOn` paths.
   // Links starting with http(s) open in a new tab.
   navLinks: [
@@ -201,10 +218,6 @@ export default {
       icon: "camera",
       activeOn: ["/gallery"],
     },
-    {
-      href: "https://aliceinstories.com",
-      label: "Books and Reading",
-      icon: "book",
-    },
+    { href: "/reading", label: "Books and Reading", icon: "book" },
   ],
 };

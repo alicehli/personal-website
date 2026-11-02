@@ -7,11 +7,13 @@ import { initTheme } from './theme.js';
 import { renderNav } from './nav.js';
 import { renderHome } from './home.js';
 import { renderShelf } from './shelf.js';
+import { renderReading } from './reading.js';
 import { renderTrips, renderGallery } from './photography.js';
 
 initTheme();
 renderNav();
 renderHome();
 renderShelf();
+renderReading();
 renderTrips();
 renderGallery();

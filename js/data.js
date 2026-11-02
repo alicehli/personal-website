@@ -197,7 +197,6 @@ export default {
       blurb:
         "Can't pick what to read next? Point it at a Goodreads want-to-read shelf (public RSS or a CSV export) and let it spin.",
       href: "https://readroulette.alicehli.com",
-      tags: ["Flask", "TypeScript"],
     },
   ],
   // Every book I've ever read, as an interactive constellation

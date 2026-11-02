@@ -1219,20 +1219,6 @@ nav {
     flex: 1;
 }
 
-.reading-card-tags {
-    display: flex;
-    gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.reading-card-tags span {
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-}
-
 /* The galaxy link: a little starfield, dark in both themes */
 .reading-galaxy {
     margin-top: 3rem;

@@ -13,7 +13,6 @@ export function renderReading() {
         <a ${linkAttrs(project.href)} class="reading-card">
             <h3 class="reading-card-title">${project.title}</h3>
             <p class="reading-card-blurb">${project.blurb}</p>
-            <div class="reading-card-tags">${project.tags.map(t => `<span>${t}</span>`).join('')}</div>
         </a>
     `).join('');
 

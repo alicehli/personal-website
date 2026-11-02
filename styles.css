@@ -412,12 +412,129 @@ nav {
         grid-template-rows: none;
     }
 
+    /* The deck below takes over */
     .photo-pile {
-        grid-column: 1;
-        grid-row: auto;
-        width: min(100%, 480px);
-        margin-top: 0;
-        margin-bottom: 1.5rem;
+        display: none;
+    }
+}
+
+/* Narrow screens: the pile as a deck, one photo at a time (see renderDeck) */
+.photo-deck {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .photo-deck {
+        display: block;
+        --card: min(72vw, 300px);
+        margin: 1.25rem 0 0.5rem;
+    }
+}
+
+.deck-stack {
+    /* Every polaroid in the same grid cell, so the stack is as tall as the tallest */
+    display: grid;
+    padding: 12px 0 20px;
+    touch-action: pan-y;
+}
+
+.deck-polaroid {
+    grid-area: 1 / 1;
+    justify-self: center;
+    align-self: center;
+    width: min-content;   /* as wide as its photo; the caption wraps to fit */
+    padding: 10px 10px 6px;
+    background: #fdfdfb;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    transform: translate(var(--x), var(--y)) rotate(var(--r));
+    transition: transform var(--transition-medium), opacity var(--transition-medium);
+    cursor: pointer;
+}
+
+.deck-polaroid.hidden {
+    opacity: 0;
+}
+
+/* Each photo keeps its own shape; --k (set by sizeForDeck) narrows tall ones so
+   every photo covers about the same area */
+.deck-polaroid img,
+.deck-polaroid video {
+    display: block;
+    width: calc(var(--card) * var(--k, 1));
+    height: auto;
+}
+
+
+.deck-polaroid .polaroid-caption {
+    font-size: 1.35rem;
+}
+
+/* Only the top photo's caption shows, so a long one behind can't peek out underneath */
+.deck-polaroid:not(.top) .polaroid-caption {
+    visibility: hidden;
+}
+
+.deck-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: calc(var(--card) + 6rem);
+    margin: 0 auto;
+}
+
+.deck-arrow {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.deck-dots {
+    display: flex;
+}
+
+/* 24px tap targets around small dots; the current one stretches into a bar */
+.deck-dot {
+    width: 20px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.deck-dot span {
+    width: 7px;
+    height: 7px;
+    border-radius: 4px;
+    background: var(--text-muted);
+    opacity: 0.5;
+    transition: width var(--transition-fast);
+}
+
+.deck-dot.current {
+    width: 32px;
+}
+
+.deck-dot.current span {
+    width: 22px;
+    background: var(--accent-green);
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .note-trigger.current {
+        background: color-mix(in srgb, var(--accent-green) 14%, transparent);
+        text-decoration-color: var(--text-primary);
     }
 }
 

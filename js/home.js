@@ -10,6 +10,9 @@ const CYCLE_OUT_MS = 220;   // how long the old word takes to slide out
 const CYCLE_EVERY_MS = 2800;   // auto-rotation; a click moves on now and restarts the count
 const FIRST_PHOTO_DELAY_MS = 1000;   // matches the hero text fading in
 
+// Matches the CSS breakpoint where the photo pile turns into the deck
+const narrow = matchMedia('(max-width: 900px)');
+
 // Photos on the pile cover roughly the same area whatever their shape: a photo's
 // width is sqrt(aspect ratio) times a square's, kept within these bounds so very
 // tall or wide photos still fit the pile
@@ -154,18 +157,18 @@ function renderHeroNotes() {
         return `<span class="note-trigger" tabindex="0" data-shot="${shots.length - 1}">${text}</span>`;
     };
     const placeLine = p =>
-        `${p.before}${trigger(p.link, { photo: p.photo, alt: p.place, caption: p.caption })}${p.after}`;
+        `${p.before}${trigger(p.link, { photo: p.photo, alt: p.place, caption: p.caption, group: 'travel' })}${p.after}`;
     const funLine = item => item.video || item.photo
-        ? trigger(item.text, { ...item, alt: item.caption })
+        ? trigger(item.text, { ...item, alt: item.caption, group: 'fun' })
         : item.text;
 
     const notes = $('.hero-notes');
     notes.innerHTML = `
         <div class="hero-notes-text">
-            <p>${travel.intro}</p>
+            <p class="travel-intro">${travel.intro}</p>
             <ul>${travel.items.map(p => `<li>${placeLine(p)}</li>`).join('')}</ul>
             <p>${placeLine(travel.home)}</p>
-            <p>${type2Fun.intro}</p>
+            <p class="fun-intro">${type2Fun.intro}</p>
             <ul>${type2Fun.items.map(item => `<li>${funLine(item)}</li>`).join('')}</ul>
         </div>
     `;
@@ -174,6 +177,12 @@ function renderHeroNotes() {
     const pile = document.createElement('div');
     pile.className = 'photo-pile';
     notes.after(pile);
+    // Narrow screens: a deck under each list's intro instead
+    const decks = ['travel', 'fun'].map(group => renderDeck(
+        notes,
+        shots.map((shot, i) => [i, shot]).filter(([, shot]) => shot.group === group),
+        $(`.${group}-intro`, notes),
+    ));
     const cards = new Map();   // shot index -> polaroid, including ones still loading
     let top = 0;
     let active = null;
@@ -206,7 +215,9 @@ function renderHeroNotes() {
     }
 
     function activate(el) {
-        if (active === el) return;
+        // Narrow screens use the deck, which follows taps instead (a scroll
+        // on a touch screen can count as hovering whatever is under the finger)
+        if (narrow.matches || active === el) return;
         deactivate();
         active = el;
         el.classList.add('active');
@@ -230,6 +241,10 @@ function renderHeroNotes() {
         if (el) activate(el);
     });
     notes.addEventListener('focusout', deactivate);
+    notes.addEventListener('click', e => {
+        const el = e.target.closest('.note-trigger');
+        if (el && narrow.matches) decks.forEach(deck => deck.showShot(+el.dataset.shot));
+    });
 
     // Drop and develop the first place once the text has faded in, so the column
     // isn't empty (unless a hover has already put something there)
@@ -241,4 +256,113 @@ function renderHeroNotes() {
     addEventListener('load', () => {
         shots.forEach(shot => { if (shot.photo) new Image().src = shot.photo; });
     }, { once: true });
+}
+
+/**
+ * Narrow screens: the pile becomes two decks, one under each list's intro. One
+ * polaroid on top at its own shape, the next two fanned out behind it; the arrows,
+ * the dots, a swipe, a tap on the top photo or on an underlined phrase move
+ * through it. CSS shows either the pile or the decks, never both.
+ */
+const DECK_POSES = [
+    { r: -2, x: 0, y: 0 },
+    { r: 5, x: 16, y: 8 },
+    { r: -6, x: -16, y: 12 },
+];
+const SWIPE_PX = 40;
+
+// Every photo in a deck covers about the same area as a full-width 3:2 one, so a
+// tall photo comes out narrower instead of towering over the wide ones
+const DECK_AREA = 2 / 3;   // of a square as wide as the deck
+
+function sizeForDeck(media) {
+    const apply = () => {
+        const [w, h] = media.tagName === 'VIDEO'
+            ? [media.videoWidth, media.videoHeight]
+            : [media.naturalWidth, media.naturalHeight];
+        if (w && h) media.style.setProperty('--k', Math.min(1, Math.sqrt(DECK_AREA * w / h)).toFixed(3));
+    };
+    if (media.tagName === 'VIDEO' && media.readyState < HTMLMediaElement.HAVE_METADATA) {
+        media.addEventListener('loadedmetadata', apply, { once: true });
+    } else if (media.tagName !== 'VIDEO' && !media.complete) {
+        media.addEventListener('load', apply, { once: true });
+    } else {
+        apply();
+    }
+}
+
+// `entries` are [shot index, shot] pairs; the deck works in positions within them
+function renderDeck(notes, entries, anchor) {
+    const deck = document.createElement('div');
+    deck.className = 'photo-deck';
+    deck.innerHTML = `
+        <div class="deck-stack">
+            ${entries.map(([, shot], k) => `
+                <div class="deck-polaroid" data-pos="${k}">
+                    ${shot.video
+                        ? `<video src="${shot.video}" muted loop playsinline preload="metadata" aria-label="${shot.alt}"></video>`
+                        : `<img src="${shot.photo}" alt="${shot.alt}" />`}
+                    <span class="polaroid-caption">${shot.caption}</span>
+                </div>`).join('')}
+        </div>
+        <div class="deck-controls">
+            <button type="button" class="deck-arrow" data-step="-1" aria-label="Previous photo">${icon('chevronLeft')}</button>
+            <div class="deck-dots">
+                ${entries.map(([, shot], k) => `<button type="button" class="deck-dot" data-pos="${k}" aria-label="Show ${shot.caption}"><span></span></button>`).join('')}
+            </div>
+            <button type="button" class="deck-arrow" data-step="1" aria-label="Next photo">${icon('chevronRight')}</button>
+        </div>
+    `;
+    anchor.after(deck);
+
+    const cards = [...deck.querySelectorAll('.deck-polaroid')];
+    const dots = [...deck.querySelectorAll('.deck-dot')];
+    cards.forEach(card => sizeForDeck($('img, video', card)));
+    const shotIds = entries.map(([i]) => i);
+    const triggers = [...notes.querySelectorAll('.note-trigger')]
+        .filter(el => shotIds.includes(+el.dataset.shot));
+    const n = entries.length;
+    let current = 0;
+
+    function show(pos, { scroll = false } = {}) {
+        current = (pos + n) % n;
+        cards.forEach((card, k) => {
+            const depth = (k - current + n) % n;
+            const pose = DECK_POSES[Math.min(depth, DECK_POSES.length - 1)];
+            card.style.cssText = `--r: ${pose.r}deg; --x: ${pose.x}px; --y: ${pose.y}px; z-index: ${n - depth}`;
+            card.classList.toggle('top', depth === 0);
+            card.classList.toggle('hidden', depth >= DECK_POSES.length);
+            const video = $('video', card);
+            if (video) depth === 0 && narrow.matches ? video.play().catch(() => {}) : video.pause();
+        });
+        dots.forEach((dot, k) => dot.classList.toggle('current', k === current));
+        triggers.forEach(el => el.classList.toggle('current', +el.dataset.shot === shotIds[current]));
+        if (scroll && narrow.matches) deck.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    deck.addEventListener('click', e => {
+        const arrow = e.target.closest('.deck-arrow');
+        const dot = e.target.closest('.deck-dot');
+        if (arrow) show(current + +arrow.dataset.step);
+        else if (dot) show(+dot.dataset.pos);
+        else if (e.target.closest('.deck-polaroid')) show(current + 1);
+    });
+
+    let startX = null;
+    const stack = $('.deck-stack', deck);
+    stack.addEventListener('pointerdown', e => { startX = e.clientX; });
+    stack.addEventListener('pointerup', e => {
+        const dx = e.clientX - (startX ?? e.clientX);
+        startX = null;
+        if (Math.abs(dx) > SWIPE_PX) show(current + (dx < 0 ? 1 : -1));
+    });
+
+    show(0);
+    return {
+        // A tapped phrase: show its photo if it's in this deck
+        showShot(i) {
+            const pos = shotIds.indexOf(i);
+            if (pos !== -1) show(pos, { scroll: true });
+        },
+    };
 }
